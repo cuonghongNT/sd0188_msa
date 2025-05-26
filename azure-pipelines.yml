@@ -1,22 +1,55 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
- trigger:
- - main
+trigger:
+- master
 
- pool:
-   vmImage: 'ubuntu-latest' 
+resources:
+- repo: self
+variables:
+- group: lib-variables
+- name: imageRepositoryBackend
+  value: 'backend'
+- name: imageRepositoryFrontend
+  value: 'frontend'
+- name: dockerfilePathBackend
+  value: '$(Build.SourcesDirectory)/src/backend/Dockerfile'
+- name: dockerfilePathFrontend
+  value: '$(Build.SourcesDirectory)/src/frontend/Dockerfile'
+- name: vmImageName
+  value: 'ubuntu-latest'
 
- variables:
-   imageName: 'pipelines-javascript-docker'
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepositoryBackend)
+        dockerfile: $(dockerfilePathBackend)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+            $(Build.BuildId)
 
- steps:
- - task: Docker@2
-   displayName: Build an image
-   inputs:
-     repository: $(imageName)
-     command: build
-     Dockerfile: app/Dockerfile
-
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepositoryFrontend)
+        dockerfile: $(dockerfilePathFrontend)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+            $(Build.BuildId)
+          
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: 'manifests'
+        path: '$(Build.SourcesDirectory)'
