@@ -3,55 +3,20 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-trigger:
-- master
+ trigger:
+ - main
 
-resources:
-- repo: self
-variables:
-- group: dev-var-group
-- name: imageRepositoryBackend
-  value: 'backend'
-- name: imageRepositoryFrontend
-  value: 'frontend'
-- name: dockerfilePathBackend
-  value: '$(Build.SourcesDirectory)/src/backend/Dockerfile'
-- name: dockerfilePathFrontend
-  value: '$(Build.SourcesDirectory)/src/frontend/Dockerfile'
-- name: vmImageName
-  value: 'ubuntu-latest'
+ pool:
+   vmImage: 'ubuntu-latest' 
 
-stages:
-- stage: Build
-  displayName: Build and push stage
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepositoryBackend)
-        dockerfile: $(dockerfilePathBackend)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-            $(Build.BuildId)
+ variables:
+   imageName: 'pipelines-javascript-docker'
 
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepositoryFrontend)
-        dockerfile: $(dockerfilePathFrontend)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-            $(Build.BuildId)
-          
-    - task: PublishPipelineArtifact@1
-      inputs:
-        artifactName: 'manifests'
-        path: '$(Build.SourcesDirectory)'
+ steps:
+ - task: Docker@2
+   displayName: Build an image
+   inputs:
+     repository: $(imageName)
+     command: build
+     Dockerfile: app/Dockerfile
 
