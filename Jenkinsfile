@@ -9,7 +9,7 @@ pipeline {
         FRONTEND_TAG = "frontend-latest"
         BACKEND_TAG = "backend-latest"
         REGION = "us-east-1"
-        EKS_CLUSTER_NAME = "sd0188-devops-for-dev"
+        EKS_CLUSTER_NAME = "sd0188-devop-for-dev"
     }
 
     stages {
