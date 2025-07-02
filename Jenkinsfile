@@ -3,6 +3,7 @@ pipeline {
     environment {
         FRONTEND_IMAGE_NAME = "practical-devops-frontend"
         BACKEND_IMAGE_NAME = "practical-devops-backend"
+        ECR_URI = "842273289390.dkr.ecr.us-east-1.amazonaws.com/sd0188-practical-devop"
         ECR_URI_FRONTEND = "842273289390.dkr.ecr.us-east-1.amazonaws.com/sd0188-practical-devop-frontend"
         ECR_URI_BACKEND = "842273289390.dkr.ecr.us-east-1.amazonaws.com/sd0188-practical-devop-backend"
         FRONTEND_TAG = "frontend-latest"
