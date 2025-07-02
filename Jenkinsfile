@@ -3,7 +3,8 @@ pipeline {
     environment {
         FRONTEND_IMAGE_NAME = "practical-devops-frontend"
         BACKEND_IMAGE_NAME = "practical-devops-backend"
-        ECR_URI = "842273289390.dkr.ecr.us-east-1.amazonaws.com/sd0188-practical-devops"
+        ECR_URI_FRONTEND = "842273289390.dkr.ecr.us-east-1.amazonaws.com/sd0188-practical-devop-frontend"
+        ECR_URI_BACKEND = "842273289390.dkr.ecr.us-east-1.amazonaws.com/sd0188-practical-devop-backend"
         FRONTEND_TAG = "frontend-latest"
         BACKEND_TAG = "backend-latest"
         REGION = "us-east-1"
@@ -26,8 +27,8 @@ pipeline {
             steps {
                 echo "Building Frontend Image..."
                     sh "docker build -t ${FRONTEND_IMAGE_NAME}:latest src/frontend"
-                    sh "docker tag ${FRONTEND_IMAGE_NAME}:latest ${ECR_URI}:${FRONTEND_TAG}"
-                    sh "docker push ${ECR_URI}:${FRONTEND_TAG}"
+                    sh "docker tag ${FRONTEND_IMAGE_NAME}:latest ${ECR_URI_FRONTEND}:${FRONTEND_TAG}"
+                    sh "docker push ${ECR_URI_FRONTEND}:${FRONTEND_TAG}"
             }
         }
 
@@ -35,8 +36,8 @@ pipeline {
             steps {
                 echo "Building Backend Image..."
                     sh "docker build -t ${BACKEND_IMAGE_NAME}:latest src/backend"
-                    sh "docker tag ${BACKEND_IMAGE_NAME}:latest ${ECR_URI}:${BACKEND_TAG}"
-                    sh "docker push ${ECR_URI}:${BACKEND_TAG}"
+                    sh "docker tag ${BACKEND_IMAGE_NAME}:latest ${ECR_URI_BACKEND}:${BACKEND_TAG}"
+                    sh "docker push ${ECR_URI_BACKEND}:${BACKEND_TAG}"
             }
         }
 
