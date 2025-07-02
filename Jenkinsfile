@@ -15,7 +15,7 @@ pipeline {
             steps {
                 script {
                     echo "Logging in to ECR..."
-                    withAWS(credentials: 'ae493027-9178-47ae-a7a4-5babff8e36c6', region: 'us-east-1') {
+                    withAWS(credentials: '4eb33416-0bea-400e-9a40-5320d9112428', region: 'us-east-1') {
                         sh "aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ECR_URI}"
                     }
                 }
