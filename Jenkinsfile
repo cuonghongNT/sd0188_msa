@@ -44,11 +44,13 @@ pipeline {
 
         stage('Deploy k8s') {
             steps {
+                withAWS(credentials: '4eb33416-0bea-400e-9a40-5320d9112428', region: 'us-east-1') {
                 echo "Deploying to Kubernetes..."
                 sh "aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${REGION}"
                 sh "kubectl apply -f ./k8s/aws/mongodb.yaml"
                 sh "kubectl apply -f ./k8s/aws/backend.yaml"
                 sh "kubectl apply -f ./k8s/aws/frontend.yaml"
+                }
             }
         }
     }
