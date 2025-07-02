@@ -45,7 +45,7 @@ pipeline {
         stage('Deploy k8s') {
             steps {
                 echo "Deploying to Kubernetes..."
-                sh "aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME}"
+                sh "aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${REGION}"
                 sh "kubectl apply -f ./k8s/aws/mongodb.yaml"
                 sh "kubectl apply -f ./k8s/aws/backend.yaml"
                 sh "kubectl apply -f ./k8s/aws/frontend.yaml"
